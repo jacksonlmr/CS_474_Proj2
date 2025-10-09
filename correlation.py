@@ -34,6 +34,7 @@ def correlation(input_img: Image, weights):
             # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
             neighborhood = getNeighborhood(padded_img, (padded_x, padded_y), mask_size)
             pixel_value = weightSumMatrix(neighborhood, weights)
+            output_img.putpixel(xy = (current_x, current_y), value = pixel_value)
 
     return output_img
 
@@ -73,7 +74,7 @@ def weightSumMatrix(matrix, weight):
         for y in range(matrix.shape[1]):
             sum += matrix[x, y]*weight[x, y]
 
-    return sum
+    return int(sum)
 
 #test padding function
 padded_image = pad_0_img(image, 20)
@@ -100,3 +101,12 @@ m2 = np.array([
 
 matrix_weight_test_sum = weightSumMatrix(m1, m2)
 print(matrix_weight_test_sum)
+
+#test correlation
+correlation_weights = np.array([
+    [1,1,1],
+    [1,1,1],
+    [1,1,1]
+])
+correlated_image = correlation(image, correlation_weights)
+correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
