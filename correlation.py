@@ -18,30 +18,31 @@ test_img.save("Input_Images/test_img.png")
 test_img = Image.open("Input_Images/test_img.png")
 
 def correlation(input_img: Image, weights: np.ndarray):
-    input_x, input_y = input_img.size
+    input_img_array = np.array(input_img)
+    input_row, input_col = input_img_array.shape
 
     #determine padding size and pad image
-    weights = np.array(weights)
     mask_size = weights.shape[0]
     pad_size = mask_size//2
-    padded_img = pad_0_img(input_img, pad_size)
+    padded_img_array = pad_0_array(input_img_array, pad_size)
 
-    output_array = np.zeros_like(input_img, dtype=np.uint8)
-    for current_y in range(input_y):
-        for current_x in range(input_x):
-            padded_x = current_x+pad_size
-            padded_y = current_y+pad_size
+    output_array = np.zeros_like(input_img_array, dtype=np.int64) 
+    for current_row in range(input_row):
+        print(f"row: {current_row}")
+        for current_col in range(input_col):
+            padded_row = current_row+pad_size
+            padded_col = current_col+pad_size
             # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
-            neighborhood = getNeighborhood(padded_img, (padded_x, padded_y), mask_size)
+            neighborhood = getNeighborhood(padded_img_array, (padded_row, padded_col), mask_size)
             pixel_value = weightSumMatrix(neighborhood, weights)
-            output_array[current_y, current_x] = pixel_value
+            output_array[current_row, current_col] = pixel_value
 
     output_array = mapValues(output_array)
     output_img = Image.fromarray(obj = output_array, mode = 'L')
 
     return output_img
 
-# def pad_0_img(input_img: Image, pad_size: int):
+# def pad_0_array(input_img: Image, pad_size: int):
 #     input_x, input_y = input_img.size
 #     padded_y = input_y + 2*pad_size
 #     padded_x = input_x + 2*pad_size
@@ -51,7 +52,7 @@ def correlation(input_img: Image, weights: np.ndarray):
 
 #     return padded_img
 
-def pad_0_img(input_img_array: np.ndarray, pad_size: int):
+def pad_0_array(input_img_array: np.ndarray, pad_size: int):
     input_row, input_col = input_img_array.shape
 
     padded_row = input_row + 2*pad_size
@@ -84,15 +85,17 @@ def getNeighborhood(input_img_array: np.ndarray, pixel: tuple, size: int):
 
 def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
     sum = 0
-    for row in range(matrix.shape[0]):
-        for col in range(matrix.shape[1]):
-            sum += matrix[row, col]*weight[row, col]
+    # for row in range(matrix.shape[0]):
+    #     for col in range(matrix.shape[1]):
+    #         sum += matrix[row, col]*weight[row, col]
+    for i in range(matrix.size):
+        sum += matrix[i]*weight[i]
 
     return int(sum)
 
 def mapValues(input_img_array: np.ndarray):
     input_row, input_col = input_img_array.shape
-    output_img_array = np.zeros_like(input_img_array)
+    output_img_array = np.zeros_like(input_img_array, dtype=np.uint8)
 
     max_value = np.max(input_img_array)
 
@@ -112,9 +115,9 @@ def mapValues(input_img_array: np.ndarray):
 #     [0, 1, 1, 1, 0],
 #     [0, 0, 0, 0, 0]
 # ])
-# padded_pad_test = pad_0_img(padding_test_array, 3)
+# padded_pad_test = pad_0_array(padding_test_array, 3)
 # print(padded_pad_test)
-# padded_image = pad_0_img(image, 20)
+# padded_image = pad_0_array(image, 20)
 # padded_image.save(f"{outfile_save_path}padded_image.jpg")
 
 #test getNeighborhood
@@ -132,20 +135,20 @@ def mapValues(input_img_array: np.ndarray):
 # image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
 
 # #test weightSumMatrix 
-# m1 = np.array([
-#     [0,0,0],
-#     [1,1,1],
-#     [2,2,2]
-# ])
+m1 = np.array([
+    [0,0,0],
+    [1,1,1],
+    [2,2,2]
+])
 
-# m2 = np.array([
-#     [2,2,2],
-#     [2,2,2],
-#     [2,2,2]
-# ])
+m2 = np.array([
+    [2,2,2],
+    [2,2,2],
+    [2,2,2]
+])
 
-# matrix_weight_test_sum = weightSumMatrix(m1, m2)
-# print(matrix_weight_test_sum)
+matrix_weight_test_sum = weightSumMatrix(m1.flatten(), m2.flatten())
+print(matrix_weight_test_sum)
 
 #test value map
 # map_test_array = np.array([
@@ -156,5 +159,7 @@ def mapValues(input_img_array: np.ndarray):
 # print(mapValues(map_test_array))
 # #test correlation
 # correlation_weights = np.full(shape = (7, 7), fill_value = 1)
-# correlated_image = correlation(image, correlation_weights)
+# pattern_array = np.array(pattern)
+# print(pattern_array)
+# correlated_image = correlation(image, pattern_array)
 # correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
