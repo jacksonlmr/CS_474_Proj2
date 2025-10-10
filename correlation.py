@@ -51,23 +51,43 @@ def pad_0_img(input_img: Image, pad_size: int):
 
     return padded_img
 
-def getNeighborhood(input_img: Image, pixel: tuple, size: int):
+# def getNeighborhood(input_img: Image, pixel: tuple, size: int):
+#     neighbor_distance = size//2
+    
+#     #x and y coordinates for top left pixel of neighborhood
+#     top_left_x = pixel[0] - neighbor_distance
+#     top_left_y = pixel[1] - neighbor_distance
+    
+#     input_x, input_y = input_img.size
+#     neighborhood = np.zeros((size, size), dtype=np.uint8)
+#     for current_y, n_current_y in zip(range(top_left_y, top_left_y+size), range(size)):
+#         for current_x, n_current_x in zip(range(top_left_x, top_left_x+size), range(size)):
+            
+#             #check to make sure coordinate is in bounds
+#             if 0 <= current_y < input_y and 0 <= current_x < input_x:
+#                 neighborhood[n_current_y, n_current_x] = input_img.getpixel((current_x, current_y))
+#             else:
+#                 neighborhood[n_current_y, n_current_x] = 0
+    
+#     return neighborhood
+
+def getNeighborhood(input_img_array: np.ndarray, pixel: tuple, size: int):
     neighbor_distance = size//2
     
     #x and y coordinates for top left pixel of neighborhood
-    top_left_x = pixel[0] - neighbor_distance
-    top_left_y = pixel[1] - neighbor_distance
+    top_left_row = pixel[0] - neighbor_distance
+    top_left_col = pixel[1] - neighbor_distance
     
-    input_x, input_y = input_img.size
+    input_row, input_col = input_img_array.shape
     neighborhood = np.zeros((size, size), dtype=np.uint8)
-    for current_y, n_current_y in zip(range(top_left_y, top_left_y+size), range(size)):
-        for current_x, n_current_x in zip(range(top_left_x, top_left_x+size), range(size)):
+    for current_row, n_current_row in zip(range(top_left_row, top_left_row+size), range(size)):
+        for current_col, n_current_col in zip(range(top_left_col, top_left_col+size), range(size)):
             
             #check to make sure coordinate is in bounds
-            if 0 <= current_y < input_y and 0 <= current_x < input_x:
-                neighborhood[n_current_y, n_current_x] = input_img.getpixel((current_x, current_y))
+            if 0 <= current_row < input_row and 0 <= current_col < input_col:
+                neighborhood[n_current_row, n_current_col] = input_img_array[current_row, current_col]
             else:
-                neighborhood[n_current_y, n_current_x] = 0
+                neighborhood[n_current_row, n_current_col] = 0
     
     return neighborhood
 
@@ -97,8 +117,17 @@ def mapValues(input_img_array: np.ndarray):
 # padded_image = pad_0_img(image, 20)
 # padded_image.save(f"{outfile_save_path}padded_image.jpg")
 
-# #test getNeighborhood
-# neighborhood = getNeighborhood(image, (240, 145), 100)
+#test getNeighborhood
+# neighborhood_test_array = np.array([
+#     [0, 0, 0, 0, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 0, 0, 0, 0]
+# ])
+# neighborhood = getNeighborhood(neighborhood_test_array, (2, 2), 3)
+# print(neighborhood)
+# neighborhood = getNeighborhood(np.array(image), (240, 145), 100)
 # image_neighborhood = Image.fromarray(neighborhood, 'L')
 # image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
 
