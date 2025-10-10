@@ -18,7 +18,6 @@ test_img.save("Input_Images/test_img.png")
 test_img = Image.open("Input_Images/test_img.png")
 
 def correlation(input_img: Image, weights: np.ndarray):
-    output_img = Image.new(mode = 'L', size = input_img.size)
     input_x, input_y = input_img.size
 
     #determine padding size and pad image
@@ -27,7 +26,7 @@ def correlation(input_img: Image, weights: np.ndarray):
     pad_size = mask_size//2
     padded_img = pad_0_img(input_img, pad_size)
 
-    output_array = np.array(output_img, dtype=np.uint8)
+    output_array = np.zeros_like(input_img, dtype=np.uint8)
     for current_y in range(input_y):
         for current_x in range(input_x):
             padded_x = current_x+pad_size
@@ -35,8 +34,10 @@ def correlation(input_img: Image, weights: np.ndarray):
             # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
             neighborhood = getNeighborhood(padded_img, (padded_x, padded_y), mask_size)
             pixel_value = weightSumMatrix(neighborhood, weights)
-            output_array[current_x, current_y] = pixel_value
+            output_array[current_y, current_x] = pixel_value
 
+    output_array = mapValues(output_array)
+    output_img = Image.fromarray(obj = output_array, mode = 'L')
 
     return output_img
 
@@ -72,9 +73,9 @@ def getNeighborhood(input_img: Image, pixel: tuple, size: int):
 
 def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
     sum = 0
-    for x in range(matrix.shape[0]):
-        for y in range(matrix.shape[1]):
-            sum += matrix[x, y]*weight[x, y]
+    for row in range(matrix.shape[0]):
+        for col in range(matrix.shape[1]):
+            sum += matrix[row, col]*weight[row, col]
 
     return int(sum)
 
@@ -101,7 +102,7 @@ def mapValues(input_img_array: np.ndarray):
 # image_neighborhood = Image.fromarray(neighborhood, 'L')
 # image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
 
-#test weightSumMatrix 
+# #test weightSumMatrix 
 # m1 = np.array([
 #     [0,0,0],
 #     [1,1,1],
@@ -118,12 +119,12 @@ def mapValues(input_img_array: np.ndarray):
 # print(matrix_weight_test_sum)
 
 #test value map
-map_test_array = np.array([
-    [300, 400, 500, 1000],
-    [1, 4, 8, 10],
-    [0, 0, 0, 0]
-])
-print(mapValues(map_test_array))
+# map_test_array = np.array([
+#     [300, 400, 500, 1000],
+#     [1, 4, 8, 10],
+#     [0, 0, 0, 0]
+# ])
+# print(mapValues(map_test_array))
 # #test correlation
 # correlation_weights = np.full(shape = (7, 7), fill_value = 1)
 # correlated_image = correlation(image, correlation_weights)
