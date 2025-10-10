@@ -41,35 +41,26 @@ def correlation(input_img: Image, weights: np.ndarray):
 
     return output_img
 
-def pad_0_img(input_img: Image, pad_size: int):
-    input_x, input_y = input_img.size
-    padded_y = input_y + 2*pad_size
-    padded_x = input_x + 2*pad_size
-
-    padded_img = Image.new(mode = 'L', size = (padded_x, padded_y), color = 0)
-    padded_img.paste(input_img, (pad_size, pad_size))
-
-    return padded_img
-
-# def getNeighborhood(input_img: Image, pixel: tuple, size: int):
-#     neighbor_distance = size//2
-    
-#     #x and y coordinates for top left pixel of neighborhood
-#     top_left_x = pixel[0] - neighbor_distance
-#     top_left_y = pixel[1] - neighbor_distance
-    
+# def pad_0_img(input_img: Image, pad_size: int):
 #     input_x, input_y = input_img.size
-#     neighborhood = np.zeros((size, size), dtype=np.uint8)
-#     for current_y, n_current_y in zip(range(top_left_y, top_left_y+size), range(size)):
-#         for current_x, n_current_x in zip(range(top_left_x, top_left_x+size), range(size)):
-            
-#             #check to make sure coordinate is in bounds
-#             if 0 <= current_y < input_y and 0 <= current_x < input_x:
-#                 neighborhood[n_current_y, n_current_x] = input_img.getpixel((current_x, current_y))
-#             else:
-#                 neighborhood[n_current_y, n_current_x] = 0
-    
-#     return neighborhood
+#     padded_y = input_y + 2*pad_size
+#     padded_x = input_x + 2*pad_size
+
+#     padded_img = Image.new(mode = 'L', size = (padded_x, padded_y), color = 0)
+#     padded_img.paste(input_img, (pad_size, pad_size))
+
+#     return padded_img
+
+def pad_0_img(input_img_array: np.ndarray, pad_size: int):
+    input_row, input_col = input_img_array.shape
+
+    padded_row = input_row + 2*pad_size
+    padded_col = input_col + 2*pad_size
+
+    padded_img_array = np.zeros(shape = (padded_row, padded_col), dtype = np.uint8)
+    padded_img_array[pad_size:padded_row-pad_size, pad_size:padded_col-pad_size] = input_img_array
+
+    return padded_img_array
 
 def getNeighborhood(input_img_array: np.ndarray, pixel: tuple, size: int):
     neighbor_distance = size//2
@@ -114,6 +105,15 @@ def mapValues(input_img_array: np.ndarray):
     return output_img_array
 
 #test padding function
+# padding_test_array = np.array([
+#     [0, 0, 0, 0, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 0, 0, 0, 0]
+# ])
+# padded_pad_test = pad_0_img(padding_test_array, 3)
+# print(padded_pad_test)
 # padded_image = pad_0_img(image, 20)
 # padded_image.save(f"{outfile_save_path}padded_image.jpg")
 
