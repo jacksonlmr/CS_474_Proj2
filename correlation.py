@@ -50,7 +50,7 @@ def correlation(input_img: Image, weights: np.ndarray):
     mask_size = weights.shape[0]
     pad_size = mask_size//2
     padded_img_array = pad_0_array(input_img_array, pad_size)
-    padded_img_width = padded_img_array.shape[0]
+    padded_img_width = padded_img_array.shape[1 ]
     padded_img_array = padded_img_array.flatten()
 
     output_array = np.zeros_like(input_img_array, dtype=np.int64).flatten()
@@ -64,6 +64,38 @@ def correlation(input_img: Image, weights: np.ndarray):
     output_img = Image.fromarray(obj = output_array, mode = 'L') 
 
     return output_img
+
+# def correlation(input_img: Image, weights: np.ndarray):
+#     input_img_array = np.array(input_img)
+#     input_row, input_col = input_img_array.shape
+
+#     mask_size = weights.shape[0]
+#     pad_size = mask_size // 2
+
+#     # Pad the image
+#     padded_img_array = pad_0_array(input_img_array, pad_size)
+#     padded_row, padded_col = padded_img_array.shape
+#     padded_flat = padded_img_array.flatten()
+
+#     output_array = np.zeros((input_row, input_col), dtype=np.int64)
+
+#     # Loop only over the *valid* (non-padding) region
+#     for r in range(pad_size, padded_row - pad_size):
+#         for c in range(pad_size, padded_col - pad_size):
+#             pixel_1d_index = r * padded_col + c
+#             neighborhood = getNeighborhood(
+#                 input_img_array=padded_flat,
+#                 input_img_width=padded_col,
+#                 pixel=(r, c),
+#                 size=mask_size
+#             )
+#             pixel_value = weightSumMatrix(matrix=neighborhood, weight=weights)
+#             output_array[r - pad_size, c - pad_size] = pixel_value  # shift back to unpadded coords
+
+#     # Map output back to 0–255 range and make image
+#     output_array = mapValues(output_array)
+#     output_img = Image.fromarray(output_array, mode='L')
+#     return output_img
 
 def pad_0_array(input_img_array: np.ndarray, pad_size: int):
     input_row, input_col = input_img_array.shape
@@ -83,7 +115,7 @@ def getNeighborhood(input_img_array: np.ndarray, input_img_width: int, pixel: tu
     top_left_row = pixel[0] - neighbor_distance
     top_left_col = pixel[1] - neighbor_distance
 
-    neighborhood = np.empty(size*size)
+    neighborhood = np.zeros(size*size, dtype=input_img_array.dtype)
 
     #2d representation of ending column for the neighborhood
     end_col = top_left_col + size 
@@ -177,8 +209,8 @@ def mapValues(input_img_array: np.ndarray):
 # correlation_weights = np.full(shape = (7, 7), fill_value = 1)
 pattern_array = np.array(pattern)
 print(pattern_array.shape)
-zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
-pattern_array = np.vstack((pattern_array, zero_pattern))
-print(pattern_array.shape)
+# zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
+# pattern_array = np.vstack((pattern_array, zero_pattern))
+# print(pattern_array.shape)
 correlated_image = correlation(image, pattern_array)
 correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
