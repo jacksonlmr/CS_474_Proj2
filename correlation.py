@@ -17,6 +17,31 @@ test_img = Image.fromarray(test_img_pixels, 'L')
 test_img.save("Input_Images/test_img.png")
 test_img = Image.open("Input_Images/test_img.png")
 
+# def correlation(input_img: Image, weights: np.ndarray):
+#     input_img_array = np.array(input_img)
+#     input_row, input_col = input_img_array.shape
+
+#     #determine padding size and pad image
+#     mask_size = weights.shape[0]
+#     pad_size = mask_size//2
+#     padded_img_array = pad_0_array(input_img_array, pad_size)
+
+#     output_array = np.zeros_like(input_img_array, dtype=np.int64) 
+#     for current_row in range(input_row):
+#         print(f"row: {current_row}")
+#         for current_col in range(input_col):
+#             padded_row = current_row+pad_size
+#             padded_col = current_col+pad_size
+#             # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
+#             neighborhood = getNeighborhood(padded_img_array.flatten(), input_row, (padded_row, padded_col), mask_size)
+#             pixel_value = weightSumMatrix(neighborhood, weights.flatten())
+#             output_array[current_row, current_col] = pixel_value
+
+#     output_array = mapValues(output_array)
+#     output_img = Image.fromarray(obj = output_array, mode = 'L')
+
+#     return output_img
+
 def correlation(input_img: Image, weights: np.ndarray):
     input_img_array = np.array(input_img)
     input_row, input_col = input_img_array.shape
@@ -25,32 +50,20 @@ def correlation(input_img: Image, weights: np.ndarray):
     mask_size = weights.shape[0]
     pad_size = mask_size//2
     padded_img_array = pad_0_array(input_img_array, pad_size)
+    padded_img_width = padded_img_array.shape[0]
+    padded_img_array = padded_img_array.flatten()
 
-    output_array = np.zeros_like(input_img_array, dtype=np.int64) 
-    for current_row in range(input_row):
-        print(f"row: {current_row}")
-        for current_col in range(input_col):
-            padded_row = current_row+pad_size
-            padded_col = current_col+pad_size
-            # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
-            neighborhood = getNeighborhood(padded_img_array.flatten(), (padded_row, padded_col), mask_size)
-            pixel_value = weightSumMatrix(neighborhood, weights.flatten())
-            output_array[current_row, current_col] = pixel_value
+    output_array = np.zeros_like(input_img_array, dtype=np.int64).flatten()
+    for pixel_index in range(input_row*input_col):
+        pixel_row_col = (pixel_index//padded_img_width, pixel_index%padded_img_width)
+        neighborhood = getNeighborhood(input_img_array=padded_img_array, input_img_width=padded_img_width, pixel=pixel_row_col, size=mask_size)
+        pixel_value = weightSumMatrix(matrix=neighborhood, weights=weights)
+        output_array[pixel_index] = pixel_value
 
-    output_array = mapValues(output_array)
-    output_img = Image.fromarray(obj = output_array, mode = 'L')
+    output_array = mapValues(output_array.reshape((input_row, input_col)))
+    output_img = Image.fromarray(obj = output_array, mode = 'L') 
 
     return output_img
-
-# def pad_0_array(input_img: Image, pad_size: int):
-#     input_x, input_y = input_img.size
-#     padded_y = input_y + 2*pad_size
-#     padded_x = input_x + 2*pad_size
-
-#     padded_img = Image.new(mode = 'L', size = (padded_x, padded_y), color = 0)
-#     padded_img.paste(input_img, (pad_size, pad_size))
-
-#     return padded_img
 
 def pad_0_array(input_img_array: np.ndarray, pad_size: int):
     input_row, input_col = input_img_array.shape
@@ -66,45 +79,31 @@ def pad_0_array(input_img_array: np.ndarray, pad_size: int):
 def getNeighborhood(input_img_array: np.ndarray, input_img_width: int, pixel: tuple, size: int):
     neighbor_distance = size//2
     
-    #x and y coordinates for top left pixel of neighborhood
+    #row and column coordinates for top left pixel of neighborhood
     top_left_row = pixel[0] - neighbor_distance
     top_left_col = pixel[1] - neighbor_distance
 
-    top_left_1d = top_left_row*input_img_width + top_left_col
-
     neighborhood = np.empty(size*size)
+
+    #2d representation of ending column for the neighborhood
     end_col = top_left_col + size 
     # i represents the ith row of the neighborhood array
     for i in range(size):
         neighbor_start_index = i*size
         neighbor_end_index = neighbor_start_index + size
+        #2d representation of row in matrix
         current_img_row = top_left_row + i
 
-        img_start_index = current_img_row*input_img_width + top_left_col
+        #calculate indices for 1d image array
+        img_start_index = current_img_row*input_img_width + top_left_col 
         img_end_index = current_img_row*input_img_width + end_col
-        print(neighborhood[neighbor_start_index:neighbor_end_index])
-        print(input_img_array[img_start_index:img_end_index])
-        neighborhood[neighbor_start_index:neighbor_end_index] = input_img_array[img_start_index:img_end_index]
 
-    
-    # input_row, input_col = input_img_array.shape
-    # neighborhood = np.zeros((size, size), dtype=np.uint8)
-    # for current_row, n_current_row in zip(range(top_left_row, top_left_row+size), range(size)):
-    #     for current_col, n_current_col in zip(range(top_left_col, top_left_col+size), range(size)):
-            
-    #         #check to make sure coordinate is in bounds
-    #         if 0 <= current_row < input_row and 0 <= current_col < input_col:
-    #             neighborhood[n_current_row, n_current_col] = input_img_array[current_row, current_col]
-    #         else:
-    #             neighborhood[n_current_row, n_current_col] = 0
+        neighborhood[neighbor_start_index:neighbor_end_index] = input_img_array[img_start_index:img_end_index]
     
     return neighborhood
 
 def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
     sum = 0
-    # for row in range(matrix.shape[0]):
-    #     for col in range(matrix.shape[1]):
-    #         sum += matrix[row, col]*weight[row, col]
     for i in range(matrix.size):
         sum += matrix[i]*weight[i]
 
@@ -138,15 +137,15 @@ def mapValues(input_img_array: np.ndarray):
 # padded_image.save(f"{outfile_save_path}padded_image.jpg")
 
 #test getNeighborhood
-neighborhood_test_array = np.array([
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0]
-])
-neighborhood = getNeighborhood(neighborhood_test_array.flatten(), 5, (1, 1), 3)
-print(neighborhood.reshape((3, 3)))
+# neighborhood_test_array = np.array([
+#     [0, 0, 0, 0, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 1, 1, 1, 0],
+#     [0, 0, 0, 0, 0]
+# ])
+# neighborhood = getNeighborhood(neighborhood_test_array.flatten(), 5, (1, 1), 3)
+# print(neighborhood.reshape((3, 3)))
 # neighborhood = getNeighborhood(np.array(image), (240, 145), 100)
 # image_neighborhood = Image.fromarray(neighborhood, 'L')
 # image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
@@ -176,7 +175,10 @@ print(neighborhood.reshape((3, 3)))
 # print(mapValues(map_test_array))
 # #test correlation
 # correlation_weights = np.full(shape = (7, 7), fill_value = 1)
-# pattern_array = np.array(pattern)
-# print(pattern_array)
-# correlated_image = correlation(image, pattern_array)
-# correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
+pattern_array = np.array(pattern)
+print(pattern_array.shape)
+zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
+pattern_array = np.vstack((pattern_array, zero_pattern))
+print(pattern_array.shape)
+correlated_image = correlation(image, pattern_array)
+correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
