@@ -129,16 +129,16 @@ def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
     return int(sum)
 
 def mapValues(input_img_array: np.ndarray):
-    input_row, input_col = input_img_array.shape
-    output_img_array = np.zeros_like(input_img_array, dtype=np.uint8)
+    input_x, input_y = input_img_array.shape
+    output_img_array = np.zeros_like(input_img_array)
 
     max_value = np.max(input_img_array)
 
-    for current_row in range(input_row):
-        for current_col in range(input_col):
-            current_value = input_img_array[current_row, current_col]
+    for current_y in range(input_y):
+        for current_x in range(input_x):
+            current_value = input_img_array[current_x, current_y]
             mapped_value = int(max(0, min(255, 255*(current_value/max_value))))
-            output_img_array[current_row, current_col] = mapped_value
+            output_img_array[current_x, current_y] = mapped_value
 
     return output_img_array
 
