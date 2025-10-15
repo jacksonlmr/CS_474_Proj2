@@ -164,26 +164,26 @@ def mapValues(input_img_array: np.ndarray):
 #     [0, 0, 0, 0]
 # ])
 # print(mapValues(map_test_array))
+
 # #test correlation
-correlation_test_array = np.array([
-    [0, 1, 2],
-    [2, 1, 0],
-    [0, 1, 2]
-], dtype=np.uint8)
+# correlation_test_array = np.array([
+#     [0, 1, 2],
+#     [2, 1, 0],
+#     [0, 1, 2]
+# ], dtype=np.uint8)
 
-test_weights = np.array([
-    [1, 1, 1],
-    [1, 1, 1],
-    [1, 1, 1]
-], dtype=np.uint8)
+test_weights = np.ones((15, 15), dtype=np.uint8)
 
-correlated_test = correlation(input_img_array=correlation_test_array, weights=test_weights)
-print(correlated_test)
-# pattern_array = np.array(pattern, dtype=np.uint8)
-# zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
-# pattern_array = np.vstack((pattern_array, zero_pattern))
-# print(pattern_array.shape)
+#using pattern array for weights
+pattern_array = np.array(pattern, dtype=np.uint8)
+zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
+pattern_array = np.vstack((pattern_array, zero_pattern))
+print(pattern_array.shape)
 
-# correlated_image = correlation(image, pattern_array)
+image_array = np.array(image, dtype=np.uint8)
+correlated_image_array = correlation(image_array, test_weights)
 
-# correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
+
+
+correlated_image = Image.fromarray(correlated_image_array)
+correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
