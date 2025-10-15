@@ -17,6 +17,7 @@ test_img = Image.fromarray(test_img_pixels, 'L')
 test_img.save("Input_Images/test_img.png")
 test_img = Image.open("Input_Images/test_img.png")
 
+
 def correlation(input_img: Image, weights: np.ndarray):
     input_width, input_height = input_img.size
 
