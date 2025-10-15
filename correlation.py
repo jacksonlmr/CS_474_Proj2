@@ -26,6 +26,7 @@ def correlation(input_img: Image, weights: np.ndarray):
     mask_size = weights.shape[1]
     pad_size = mask_size//2
     padded_img = pad_0_img(input_img, pad_size)
+    padded_img_array = np.array(padded_img, dtype=np.uint8)
     # print(f"Padded image: \n{np.array(padded_img, dtype=np.uint8)}")
 
     # height for rows, width for cols
@@ -35,7 +36,7 @@ def correlation(input_img: Image, weights: np.ndarray):
             padded_row = current_row+pad_size
             padded_col = current_col+pad_size
             # current_input_pixel = padded_img.getpixel((padded_y, padded_x))
-            neighborhood = getNeighborhood(padded_img, (padded_row, padded_col), mask_size)
+            neighborhood = getNeighborhood(padded_img_array, (padded_row, padded_col), mask_size)
             # print(f"neighborhood at ({padded_row}, {padded_col}): \n{neighborhood}")
             pixel_value = weightSumMatrix(neighborhood, weights)
             output_array[current_row, current_col] = pixel_value
@@ -58,14 +59,14 @@ def pad_0_img(input_img: Image, pad_size: int):
     return padded_img
 
 
-def getNeighborhood(input_img: Image, pixel: tuple, size: int):
+def getNeighborhood(input_img_array: np.ndarray, pixel: tuple, size: int):
     """
     Gets the neighborhood surrounding pixel
 
     **Parameters**
     ---------------
     >**input_img**:
-    >Image object, can be any size
+    >numpy ndarray representing image
 
     >**pixel**:
     >Tuple containing (row, column) coordinates of center of the neighborhood
@@ -84,9 +85,8 @@ def getNeighborhood(input_img: Image, pixel: tuple, size: int):
     top_left_row = pixel[0] - neighbor_distance
     top_left_col = pixel[1] - neighbor_distance
      
-    #two lines for clarity between libraries
-    input_width, input_height = input_img.size
-    input_row, input_col = input_height, input_width
+    #size of input image array
+    input_row, input_col = input_img_array.shape
     
     neighborhood = np.zeros((size, size), dtype=np.uint8)
 
@@ -96,7 +96,7 @@ def getNeighborhood(input_img: Image, pixel: tuple, size: int):
             #check to make sure coordinate is in bounds
             if 0 <= current_row < input_row and 0 <= current_col < input_col:
                 #getpixel takes (width, height) -> (col, row)
-                neighborhood[n_current_row, n_current_col] = input_img.getpixel((current_col, current_row))
+                neighborhood[n_current_row, n_current_col] = input_img_array[current_row, current_col]
             else:
                 neighborhood[n_current_row, n_current_col] = 0
     
@@ -128,12 +128,22 @@ def mapValues(input_img_array: np.ndarray):
 # padded_image = pad_0_img(image, 20)
 # padded_image.save(f"{outfile_save_path}padded_image.jpg")
 
-# #test getNeighborhood
+#test getNeighborhood
+# neighborhood_test_array = np.array([
+#     [0, 1, 2, 3, 4],
+#     [6, 7, 8, 9, 10],
+#     [11, 12, 13, 14, 15],
+#     [16, 17, 18, 19, 20],
+#     [21, 22, 23, 24, 25]
+# ])
+
+# neighborhood = getNeighborhood(neighborhood_test_array, (1, 3), 3)
+# print(neighborhood)
 # neighborhood = getNeighborhood(image, (240, 145), 100)
 # image_neighborhood = Image.fromarray(neighborhood, 'L') 
 # image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
 
-# #test weightSumMatrix 
+#test weightSumMatrix 
 # m1 = np.array([
 #     [0,0,0],
 #     [1,1,1],
@@ -176,11 +186,11 @@ def mapValues(input_img_array: np.ndarray):
 # correlated_image = correlation(image, correlation_weights)
 # correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
 
-pattern_array = np.array(pattern, dtype=np.uint8)
-zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
-pattern_array = np.vstack((pattern_array, zero_pattern))
-print(pattern_array.shape)
+# pattern_array = np.array(pattern, dtype=np.uint8)
+# zero_pattern = np.zeros((pattern_array.shape[1]-pattern_array.shape[0], pattern_array.shape[1]))
+# pattern_array = np.vstack((pattern_array, zero_pattern))
+# print(pattern_array.shape)
 
-correlated_image = correlation(image, pattern_array)
+# correlated_image = correlation(image, pattern_array)
 
-correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
+# correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
