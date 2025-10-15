@@ -1,5 +1,7 @@
 from PIL import Image
 import numpy as np
+import time
+from numba import jit, cuda
 
 outfile_save_path = "Output_Images/"
 image = Image.open("Input_Images/Image.pgm")
@@ -181,9 +183,10 @@ pattern_array = np.vstack((pattern_array, zero_pattern))
 print(pattern_array.shape)
 
 image_array = np.array(image, dtype=np.uint8)
-correlated_image_array = correlation(image_array, test_weights)
-
-
+start_time = time.time()
+correlated_image_array = correlation(image_array, pattern_array)
+end_time = time.time()
+print(f'Time: {end_time-start_time}')
 
 correlated_image = Image.fromarray(correlated_image_array)
 correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
