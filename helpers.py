@@ -135,6 +135,26 @@ def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
 
     return int(sum)
 
+def guassianSums(matrix: np.ndarray, weight: np.ndarray):
+    """
+    Sums all values of **matrix**, each weighted with the corresponding value in **weight**
+
+    **Parameters**
+    ---------------
+    >**matrix**:
+    >np.ndarray representing the matrix to be summed
+
+    >**weight**:
+    >np.ndarray representing the weights
+
+    **Returns**
+    -----------
+    >**sum**: integer result of the operation
+    """
+    # running out of time. I think that the way to solve this is to perform a sum betweeen one vector (x) and the neighborhood, 
+    # then an outer sum between that result and the other vector (y)
+
+
 #test padding function
 # padding_test_array = np.array([
 #     [0, 1, 2, 3, 4],

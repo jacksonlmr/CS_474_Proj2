@@ -1,6 +1,7 @@
 from helpers import traverseImage, weightSumMatrix
 import numpy as np
 import cv2
+from scipy.stats import norm
 
 outfile_save_path = "Output_Images/"
 
@@ -45,9 +46,18 @@ def average(input_img_array: np.ndarray, size: int):
 
 # print(average(average_test_array, 3))
 
-def gaussian(input_img_array: np.ndarray, std_dev: int):
-    size = 5*std_dev
-    weights = np.random.normal(loc=0, scale=std_dev, size=(size, size))
+def gaussian(input_img_array: np.ndarray, std_dev: float):
+    #calculate size of kernel
+    size = int(np.ceil(5*std_dev))
+
+    #starting and ending coordinates to sample x and y
+    coord_start, coord_end = -(size-1)//2, (size-1)//2
+    
+    #generate 1d x, generate 1d y
+    x = y = np.linspace(coord_start, coord_end, size)
+    #outer product
+
     return traverseImage(input_img_array, weights, weightSumMatrix)
 
-print(np.random.normal(loc=0, scale=1.4, size=7))
+lenna_guassian = gaussian(lenna, 1.4)
+cv2.imwrite(f'{outfile_save_path}lenna_guassian.jpg', lenna_guassian)
