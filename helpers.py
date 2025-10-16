@@ -86,29 +86,6 @@ def getNeighborhood(input_img_array: np.ndarray, pixel: tuple, size: int):
     
     return neighborhood
 
-def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
-    """
-    Sums all values of **matrix**, each weighted with the corresponding value in **weight**
-
-    **Parameters**
-    ---------------
-    >**matrix**:
-    >np.ndarray representing the matrix to be summed
-
-    >**weight**:
-    >np.ndarray representing the weights
-
-    **Returns**
-    -----------
-    >**sum**: integer result of the operation
-    """
-    sum = 0
-    for row in range(matrix.shape[0]):
-        for col in range(matrix.shape[1]):
-            sum += matrix[row, col]*weight[row, col]
-
-    return int(sum)
-
 def mapValues(input_img_array: np.ndarray):
     """
     Maps values from detected range to [0, 255]
@@ -134,3 +111,79 @@ def mapValues(input_img_array: np.ndarray):
             output_img_array[current_row, current_col] = mapped_value
 
     return output_img_array
+
+def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
+    """
+    Sums all values of **matrix**, each weighted with the corresponding value in **weight**
+
+    **Parameters**
+    ---------------
+    >**matrix**:
+    >np.ndarray representing the matrix to be summed
+
+    >**weight**:
+    >np.ndarray representing the weights
+
+    **Returns**
+    -----------
+    >**sum**: integer result of the operation
+    """
+    sum = 0
+    for row in range(matrix.shape[0]):
+        for col in range(matrix.shape[1]):
+            sum += matrix[row, col]*weight[row, col]
+
+    return int(sum)
+
+#test padding function
+# padding_test_array = np.array([
+#     [0, 1, 2, 3, 4],
+#     [6, 7, 8, 9, 10],
+#     [11, 12, 13, 14, 15],
+#     [16, 17, 18, 19, 20],
+#     [21, 22, 23, 24, 25]
+# ])
+# print(np.pad(padding_test_array, pad_width=1))
+# padded_image = pad_0_img(image, 20)
+# padded_image.save(f"{outfile_save_path}padded_image.jpg")
+
+#test getNeighborhood
+# neighborhood_test_array = np.array([
+#     [0, 1, 2, 3, 4],
+#     [6, 7, 8, 9, 10],
+#     [11, 12, 13, 14, 15],
+#     [16, 17, 18, 19, 20],
+#     [21, 22, 23, 24, 25]
+# ])
+
+# neighborhood = getNeighborhood(neighborhood_test_array, (1, 3), 3)
+# print(neighborhood)
+# neighborhood = getNeighborhood(image, (240, 145), 100)
+# image_neighborhood = Image.fromarray(neighborhood, 'L') 
+# image_neighborhood.save(f"{outfile_save_path}image_test_neighborhood.jpg")
+
+#test weightSumMatrix 
+# m1 = np.array([
+#     [0,0,0],
+#     [1,1,1],
+#     [2,2,2]
+# ])
+
+# m2 = np.array([
+#     [2,2,2],
+#     [2,2,2],
+#     [2,2,2]
+# ])
+
+# matrix_weight_test_sum = weightSumMatrix(m1, m2)
+# print(matrix_weight_test_sum)
+
+#test value map
+# map_test_array = np.array([
+#     [300, 400, 500, 1000],
+#     [1, 4, 8, 10],
+#     [0, 0, 0, 0]
+# ])
+# print(mapValues(map_test_array))
+
+# #test correlation
