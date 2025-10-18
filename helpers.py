@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Callable
+import random
 
 def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: Callable[[np.ndarray, np.ndarray], np.ndarray]):
     """
@@ -135,25 +136,35 @@ def weightSumMatrix(matrix: np.ndarray, weight: np.ndarray):
 
     return int(sum)
 
-def guassianSums(matrix: np.ndarray, weight: np.ndarray):
-    """
-    Sums all values of **matrix**, each weighted with the corresponding value in **weight**
+def salt_pepper_noise(input_img_array: np.ndarray, noise_percent: float):
+    #calculate step to go through array based on percent
+    input_rows = input_img_array.shape[0]
+    input_cols = input_img_array.shape[1]
 
-    **Parameters**
-    ---------------
-    >**matrix**:
-    >np.ndarray representing the matrix to be summed
+    row_step = int(np.ceil(input_rows*noise_percent))
+    col_step = int(np.ceil(input_cols*noise_percent))
 
-    >**weight**:
-    >np.ndarray representing the weights
+    #at each, randomly make the pixel black or white (50% chance of each)
+    for row in range(input_rows):
+        for col in range(input_cols):
+            if (random.random() < noise_percent):
+                if random.randint(0, 1) == 0:
+                    input_img_array[row, col] = 0
+                else:
+                    input_img_array[row, col] = 255
 
-    **Returns**
-    -----------
-    >**sum**: integer result of the operation
-    """
-    # running out of time. I think that the way to solve this is to perform a sum betweeen one vector (x) and the neighborhood, 
-    # then an outer sum between that result and the other vector (y)
+    return input_img_array
 
+
+#test salt and pepper noise            
+# salt_pepper_test_array = np.array([
+#     [0, 1, 2, 3, 4],
+#     [6, 7, 8, 9, 10],
+#     [11, 12, 13, 14, 15],
+#     [16, 17, 18, 19, 20],
+#     [21, 22, 23, 24, 25]
+# ])
+# print(salt_pepper_noise(salt_pepper_test_array, .5))
 
 #test padding function
 # padding_test_array = np.array([

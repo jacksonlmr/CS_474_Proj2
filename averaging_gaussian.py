@@ -1,12 +1,13 @@
 from helpers import traverseImage, weightSumMatrix
 import numpy as np
 import cv2
-from scipy.stats import norm
 
 outfile_save_path = "Output_Images/"
 
 lenna = cv2.imread('Input_Images/lenna.gif', flags=0)
 sf = cv2.imread('Input_Images/sf.gif', flags=0)
+
+cv2.imwrite(f'{outfile_save_path}lenna.jpg', lenna)
 
 # print(lenna)
 def average(input_img_array: np.ndarray, size: int):
@@ -32,11 +33,11 @@ def average(input_img_array: np.ndarray, size: int):
     
     return traverseImage(input_img_array, weights, weightSumMatrix)
 
-lenna_average7 = average(lenna, 7)
-cv2.imwrite(f'{outfile_save_path}lenna_averaged7.jpg', lenna_average7)
+# lenna_average7 = average(lenna, 7)
+# cv2.imwrite(f'{outfile_save_path}lenna_averaged7.jpg', lenna_average7)
 
-lenna_average15 = average(lenna, 15)
-cv2.imwrite(f'{outfile_save_path}lenna_averaged15.jpg', lenna_average15)
+# lenna_average15 = average(lenna, 15)
+# cv2.imwrite(f'{outfile_save_path}lenna_averaged15.jpg', lenna_average15)
 
 # average_test_array = np.array([
 #     [0, 1, 2],
