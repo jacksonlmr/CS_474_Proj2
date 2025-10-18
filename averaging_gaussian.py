@@ -49,7 +49,7 @@ def average(input_img_array: np.ndarray, size: int):
 
 def gaussian(input_img_array: np.ndarray, weights: np.ndarray):
     """
-    Computes the guassian of an image with a given mask.
+    Computes the gaussian of an image with a given mask.
 
     **Parameters**
     ---------------

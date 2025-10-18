@@ -15,7 +15,7 @@ def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: C
     >np.ndarray representing the mask to be used. Should have dtype=np.uint8.
 
     >**operation**:
-    >Function that take 2 np.ndarray's as arguments and returns a np.ndarray 
+    >Function that take 2 np.ndarray's as arguments and returns an integer value for pixel value
 
     **Returns**
     -----------
@@ -38,6 +38,46 @@ def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: C
 
             neighborhood = getNeighborhood(padded_img_array, (padded_row, padded_col), mask_size)
             pixel_value = operation(neighborhood, weights)
+
+            output_array[current_row, current_col] = pixel_value
+
+    output_array = mapValues(output_array)
+    return output_array
+
+def traverseImage(input_img_array: np.ndarray, size: np.ndarray, operation: Callable[[np.ndarray, np.ndarray], np.ndarray]):
+    """
+    Computes the correlation of an image with a given mask.
+
+    **Parameters**
+    ---------------
+    >**input_img_array**:
+    >np.ndarray representing image. Should have dtype=np.uint8.
+
+    >**size**:
+    >size of the neighborhood to compute at each pixel
+
+    >**operation**:
+    >Function that takes 1 np.ndarray and size as arguments and returns an integer value for pixel value
+
+    **Returns**
+    -----------
+    >**output_array**: 2D array representing the output of performing the passed functionality at each pixel
+    """
+    input_row, input_col = input_img_array.shape
+
+    #determine padding size and pad image
+    pad_size = size//2
+    padded_img_array = np.pad(array=input_img_array, pad_width=pad_size)
+
+    # height for rows, width for cols
+    output_array = np.zeros((input_row, input_col), dtype=np.uint64)
+    for current_row in range(input_row):
+        for current_col in range(input_col):
+            padded_row = current_row+pad_size
+            padded_col = current_col+pad_size
+
+            neighborhood = getNeighborhood(padded_img_array, (padded_row, padded_col), size)
+            pixel_value = operation(neighborhood)
 
             output_array[current_row, current_col] = pixel_value
 
@@ -154,6 +194,20 @@ def salt_pepper_noise(input_img_array: np.ndarray, noise_percent: float):
                     input_img_array[row, col] = 255
 
     return input_img_array
+
+def get_median(input_array: np.ndarray):
+    return int(np.median(input_array))
+
+#test get median
+# get_median_test_array = np.array([
+#     [0, 1, 2, 3, 4],
+#     [6, 7, 8, 9, 10],
+#     [11, 12, 13, 14, 15],
+#     [16, 17, 18, 19, 20],
+#     [21, 22, 23, 24, 25]
+# ])
+
+# print(get_median(get_median_test_array))
 
 
 #test salt and pepper noise            
