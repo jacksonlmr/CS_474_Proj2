@@ -59,6 +59,7 @@ def gradient_magnitude(x_values: np.ndarray, y_values: np.ndarray):
     gradient_mag_array = mapValues(gradient_mag_array)
     return gradient_mag_array
 
+#prewitt
 prewitt_x = np.array([
     [-1, -1, -1],
     [0, 0, 0],
@@ -80,12 +81,52 @@ prewitt_y = np.array([
 # lenna_prewitt_mag = gradient_magnitude(lenna_prewitt_x, lenna_prewitt_y)
 # cv2.imwrite(f'{outfile_save_path}lenna_prewitt_mag.jpg', lenna_prewitt_mag)
 
-sf_prewitt_x = gradient(sf, prewitt_x)
-cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
+# sf_prewitt_x = gradient(sf, prewitt_x)
+# cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
 
-sf_prewitt_y = gradient(sf, prewitt_y)
-cv2.imwrite(f'{outfile_save_path}sf_prewitt_y.jpg', sf_prewitt_y)
+# sf_prewitt_y = gradient(sf, prewitt_y)
+# cv2.imwrite(f'{outfile_save_path}sf_prewitt_y.jpg', sf_prewitt_y)
 
-sf_prewitt_mag = gradient_magnitude(sf_prewitt_x, sf_prewitt_y)
-cv2.imwrite(f'{outfile_save_path}sf_prewitt_mag.jpg', sf_prewitt_mag)
+# sf_prewitt_mag = gradient_magnitude(sf_prewitt_x, sf_prewitt_y)
+# cv2.imwrite(f'{outfile_save_path}sf_prewitt_mag.jpg', sf_prewitt_mag)
 
+
+#sobel
+sobel_x = np.array([
+    [-1, -2, -1],
+    [0, 0, 0],
+    [1, 2, 1]
+])
+
+sobel_y = np.array([
+    [-1, 0, 1],
+    [-2, 0, 2],
+    [-1, 0, 1]
+])
+
+# lenna_sobel_x = gradient(lenna, sobel_x)
+# cv2.imwrite(f'{outfile_save_path}lenna_sobel_x.jpg', lenna_sobel_x)
+
+# lenna_sobel_y = gradient(lenna, sobel_y)
+# cv2.imwrite(f'{outfile_save_path}lenna_sobel_y.jpg', lenna_sobel_y)
+
+# lenna_sobel_mag = gradient_magnitude(lenna_sobel_x, lenna_sobel_y)
+# cv2.imwrite(f'{outfile_save_path}lenna_sobel_mag.jpg', lenna_sobel_mag)
+
+# sf_sobel_x = gradient(sf, sobel_x)
+# cv2.imwrite(f'{outfile_save_path}sf_sobel_x.jpg', sf_sobel_x)
+
+# sf_sobel_y = gradient(sf, sobel_y)
+# cv2.imwrite(f'{outfile_save_path}sf_sobel_y.jpg', sf_sobel_y)
+
+# sf_sobel_mag = gradient_magnitude(sf_sobel_x, sf_sobel_y)
+# cv2.imwrite(f'{outfile_save_path}sf_sobel_mag.jpg', sf_sobel_mag)
+
+laplacian_mask = np.array([
+    [0, 1, 0],
+    [1, -4, 1],
+    [0, 1, 0]
+])
+
+laplacian = gradient(lenna, laplacian_mask)
+cv2.imwrite(f'{outfile_save_path}laplacian.jpg', laplacian)
