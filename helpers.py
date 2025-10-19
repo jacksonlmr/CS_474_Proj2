@@ -201,6 +201,37 @@ def salt_pepper_noise(input_img_array: np.ndarray, noise_percent: float):
 def get_median(input_array: np.ndarray):
     return int(np.median(input_array))
 
+def add_images(input_img_1: np.ndarray, input_image_2: np.ndarray):
+    """
+    Computes the addition of 2 images. Input images should be the same shape. 
+
+    **Parameters**
+    ---------------
+    >**x_values**:
+    >np.ndarray. Should have dtype=np.uint8.
+
+    >**y_values**:
+    >np.ndarray. Should have dtype=np.uint8.
+
+    **Returns**
+    -----------
+    >**output_array**: 2D array representing the addition of the 2 images.
+    """
+    #both images should be same shape
+    rows, cols = input_img_1.shape
+
+    #calculate the magnitude of the gradient at every pixel in the image
+    summed_array = np.zeros(shape=(rows, cols), dtype=np.int64)
+    for row in range(rows):
+        for col in range(cols):
+            img_1_value = input_img_1[row, col]
+            img_2_value = input_image_2[row, col]
+
+            values_sum = img_1_value+img_2_value
+            summed_array[row, col] = values_sum
+
+    summed_array = mapValues(summed_array)
+    return summed_array
 #test get median
 # get_median_test_array = np.array([
 #     [0, 1, 2, 3, 4],

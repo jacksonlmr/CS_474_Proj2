@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from helpers import traverseImage, weightSumMatrix, mapValues
+from helpers import traverseImage, weightSumMatrix, mapValues, add_images
 import math
 
 outfile_save_path = "Output_Images/Gradient_Laplacian/"
@@ -45,6 +45,8 @@ def gradient_magnitude(x_values: np.ndarray, y_values: np.ndarray):
     #x and y will have same number of rows and cols
     rows, cols = x_values.shape
 
+    x_values = x_values.astype(np.uint64)
+    y_values = y_values.astype(np.uint64)
     #calculate the magnitude of the gradient at every pixel in the image
     gradient_mag_array = np.zeros(shape=(rows, cols), dtype=np.uint64)
     for row in range(rows):
@@ -52,7 +54,7 @@ def gradient_magnitude(x_values: np.ndarray, y_values: np.ndarray):
             x_value = x_values[row, col]
             y_value = y_values[row, col]
 
-            gradient_mag_value = int(math.sqrt((x_value**2)+(y_value**2)))
+            gradient_mag_value = math.sqrt((x_value**2)+(y_value**2))
             print(f'x_value: {x_value}\ny_value: {y_value}\nmag: {gradient_mag_value}\n\n')
             gradient_mag_array[row, col] = gradient_mag_value
 
@@ -72,6 +74,7 @@ prewitt_y = np.array([
     [-1, 0, 1]
 ])
 
+# #lenna prewitt
 # lenna_prewitt_x = gradient(lenna, prewitt_x)
 # cv2.imwrite(f'{outfile_save_path}lenna_prewitt_x.jpg', lenna_prewitt_x)
 
@@ -81,6 +84,12 @@ prewitt_y = np.array([
 # lenna_prewitt_mag = gradient_magnitude(lenna_prewitt_x, lenna_prewitt_y)
 # cv2.imwrite(f'{outfile_save_path}lenna_prewitt_mag.jpg', lenna_prewitt_mag)
 
+# #lenna prewitt sharpen
+# lenna_prewitt_mag = lenna_prewitt_mag.astype(np.int64)
+# prewitt_sharpened_lenna = add_images(lenna, -1*lenna_prewitt_mag)
+# cv2.imwrite(f'{outfile_save_path}prewitt_sharpened_lenna.jpg', prewitt_sharpened_lenna)
+
+# #sf prewitt
 # sf_prewitt_x = gradient(sf, prewitt_x)
 # cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
 
@@ -89,6 +98,11 @@ prewitt_y = np.array([
 
 # sf_prewitt_mag = gradient_magnitude(sf_prewitt_x, sf_prewitt_y)
 # cv2.imwrite(f'{outfile_save_path}sf_prewitt_mag.jpg', sf_prewitt_mag)
+
+# #sf prewitt sharpen
+# sf_prewitt_mag = sf_prewitt_mag.astype(np.int64)
+# prewitt_sharpened_sf = add_images(sf, -1*sf_prewitt_mag)
+# cv2.imwrite(f'{outfile_save_path}prewitt_sharpened_sf.jpg', prewitt_sharpened_sf)
 
 
 #sobel
@@ -104,6 +118,7 @@ sobel_y = np.array([
     [-1, 0, 1]
 ])
 
+# #lenna sobel
 # lenna_sobel_x = gradient(lenna, sobel_x)
 # cv2.imwrite(f'{outfile_save_path}lenna_sobel_x.jpg', lenna_sobel_x)
 
@@ -113,6 +128,12 @@ sobel_y = np.array([
 # lenna_sobel_mag = gradient_magnitude(lenna_sobel_x, lenna_sobel_y)
 # cv2.imwrite(f'{outfile_save_path}lenna_sobel_mag.jpg', lenna_sobel_mag)
 
+# #lenna sobel sharpen
+# lenna_sobel_mag = lenna_sobel_mag.astype(np.int64)
+# sobel_sharpened_lenna = add_images(lenna, -1*lenna_sobel_mag)
+# cv2.imwrite(f'{outfile_save_path}sobel_sharpened_lenna.jpg', sobel_sharpened_lenna)
+
+# #sf sobel
 # sf_sobel_x = gradient(sf, sobel_x)
 # cv2.imwrite(f'{outfile_save_path}sf_sobel_x.jpg', sf_sobel_x)
 
@@ -122,11 +143,30 @@ sobel_y = np.array([
 # sf_sobel_mag = gradient_magnitude(sf_sobel_x, sf_sobel_y)
 # cv2.imwrite(f'{outfile_save_path}sf_sobel_mag.jpg', sf_sobel_mag)
 
+# #sf sobel sharpen
+# sf_sobel_mag = sf_sobel_mag.astype(np.int64)
+# sobel_sharpened_sf = add_images(sf, -1*sf_sobel_mag)
+# cv2.imwrite(f'{outfile_save_path}sobel_sharpened_sf.jpg', sobel_sharpened_sf)
+
 laplacian_mask = np.array([
     [0, 1, 0],
     [1, -4, 1],
     [0, 1, 0]
 ])
 
-laplacian = gradient(lenna, laplacian_mask)
-cv2.imwrite(f'{outfile_save_path}laplacian.jpg', laplacian)
+lenna_laplacian = gradient(lenna, laplacian_mask)
+cv2.imwrite(f'{outfile_save_path}lenna_laplacian.jpg', lenna_laplacian)
+
+#allow negative values in array
+lenna_laplacian = lenna_laplacian.astype(np.int64)
+laplacian_sharpened_lenna = add_images(lenna, -1*lenna_laplacian)
+cv2.imwrite(f'{outfile_save_path}laplacian_sharpened_lenna.jpg', laplacian_sharpened_lenna)
+
+
+sf_laplacian = gradient(sf, laplacian_mask)
+cv2.imwrite(f'{outfile_save_path}sf_laplacian.jpg', sf_laplacian)
+
+#allow negative values in array
+sf_laplacian = sf_laplacian.astype(np.int64)
+laplacian_sharpened_sf = add_images(sf, -1*sf_laplacian)
+cv2.imwrite(f'{outfile_save_path}laplacian_sharpened_sf.jpg', laplacian_sharpened_sf)
