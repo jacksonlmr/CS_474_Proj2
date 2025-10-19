@@ -39,3 +39,12 @@ prewitt_y = np.array([
 
 lenna_prewitt_x = gradient(lenna, prewitt_x)
 cv2.imwrite(f'{outfile_save_path}lenna_prewitt_x.jpg', lenna_prewitt_x)
+
+lenna_prewitt_y = gradient(lenna, prewitt_y)
+cv2.imwrite(f'{outfile_save_path}lenna_prewitt_y.jpg', lenna_prewitt_y)
+
+sf_prewitt_x = gradient(sf, prewitt_x)
+cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
+
+sf_prewitt_y = gradient(sf, prewitt_y)
+cv2.imwrite(f'{outfile_save_path}sf_prewitt_y.jpg', sf_prewitt_y)
