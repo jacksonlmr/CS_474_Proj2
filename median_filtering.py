@@ -2,7 +2,7 @@ from helpers import salt_pepper_noise, traverseImage, get_median
 import cv2
 import numpy as np
 
-outfile_save_path = "Output_Images/"
+outfile_save_path = "Output_Images/Median_Filtering/"
 
 lenna = cv2.imread('Input_Images/lenna.gif', flags=0)
 boat = cv2.imread('Input_Images/boat.gif', flags=0)

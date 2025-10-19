@@ -3,7 +3,7 @@ import numpy as np
 from helpers import traverseImage, weightSumMatrix
 from typing import Callable
 
-outfile_save_path = "Output_Images/"
+outfile_save_path = "Output_Images/Correlation/"
 
 image = Image.open("Input_Images/Image.pgm")
 image.save("Input_Images/Image.jpg")

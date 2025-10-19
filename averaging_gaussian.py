@@ -2,7 +2,7 @@ from helpers import traverseImage, weightSumMatrix
 import numpy as np
 import cv2
 
-outfile_save_path = "Output_Images/"
+outfile_save_path = "Output_Images/Average_Gaussian/"
 
 lenna = cv2.imread('Input_Images/lenna.gif', flags=0)
 sf = cv2.imread('Input_Images/sf.gif', flags=0)

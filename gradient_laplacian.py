@@ -3,7 +3,7 @@ import cv2
 from helpers import traverseImage, weightSumMatrix, mapValues
 import math
 
-outfile_save_path = "Output_Images/"
+outfile_save_path = "Output_Images/Gradient_Laplacian/"
 
 lenna = cv2.imread('Input_Images/lenna.gif', flags=0)
 sf = cv2.imread('Input_Images/sf.gif', flags=0)
@@ -45,6 +45,7 @@ def gradient_magnitude(x_values: np.ndarray, y_values: np.ndarray):
     #x and y will have same number of rows and cols
     rows, cols = x_values.shape
 
+    #calculate the magnitude of the gradient at every pixel in the image
     gradient_mag_array = np.zeros(shape=(rows, cols), dtype=np.uint64)
     for row in range(rows):
         for col in range(cols):
@@ -70,17 +71,21 @@ prewitt_y = np.array([
     [-1, 0, 1]
 ])
 
-lenna_prewitt_x = gradient(lenna, prewitt_x)
-cv2.imwrite(f'{outfile_save_path}lenna_prewitt_x.jpg', lenna_prewitt_x)
+# lenna_prewitt_x = gradient(lenna, prewitt_x)
+# cv2.imwrite(f'{outfile_save_path}lenna_prewitt_x.jpg', lenna_prewitt_x)
 
-lenna_prewitt_y = gradient(lenna, prewitt_y)
-cv2.imwrite(f'{outfile_save_path}lenna_prewitt_y.jpg', lenna_prewitt_y)
+# lenna_prewitt_y = gradient(lenna, prewitt_y)
+# cv2.imwrite(f'{outfile_save_path}lenna_prewitt_y.jpg', lenna_prewitt_y)
 
-lenna_prewitt_mag = gradient_magnitude(lenna_prewitt_x, lenna_prewitt_y)
-cv2.imwrite(f'{outfile_save_path}lenna_prewitt_mag.jpg', lenna_prewitt_mag)
-# sf_prewitt_x = gradient(sf, prewitt_x)
-# cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
+# lenna_prewitt_mag = gradient_magnitude(lenna_prewitt_x, lenna_prewitt_y)
+# cv2.imwrite(f'{outfile_save_path}lenna_prewitt_mag.jpg', lenna_prewitt_mag)
 
-# sf_prewitt_y = gradient(sf, prewitt_y)
-# cv2.imwrite(f'{outfile_save_path}sf_prewitt_y.jpg', sf_prewitt_y)
+sf_prewitt_x = gradient(sf, prewitt_x)
+cv2.imwrite(f'{outfile_save_path}sf_prewitt_x.jpg', sf_prewitt_x)
+
+sf_prewitt_y = gradient(sf, prewitt_y)
+cv2.imwrite(f'{outfile_save_path}sf_prewitt_y.jpg', sf_prewitt_y)
+
+sf_prewitt_mag = gradient_magnitude(sf_prewitt_x, sf_prewitt_y)
+cv2.imwrite(f'{outfile_save_path}sf_prewitt_mag.jpg', sf_prewitt_mag)
 
