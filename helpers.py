@@ -1,7 +1,9 @@
 import numpy as np
 from typing import Callable
 import random
+from multipledispatch import dispatch
 
+@dispatch(np.ndarray, np.ndarray, object)
 def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: Callable[[np.ndarray, np.ndarray], np.ndarray]):
     """
     Computes the correlation of an image with a given mask.
@@ -30,7 +32,7 @@ def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: C
     padded_img_array = np.pad(array=input_img_array, pad_width=pad_size)
 
     # height for rows, width for cols
-    output_array = np.zeros((input_row, input_col), dtype=np.uint64)
+    output_array = np.zeros((input_row, input_col), dtype=np.int64)
     for current_row in range(input_row):
         for current_col in range(input_col):
             padded_row = current_row+pad_size
@@ -44,7 +46,8 @@ def traverseImage(input_img_array: np.ndarray, weights: np.ndarray, operation: C
     output_array = mapValues(output_array)
     return output_array
 
-def traverseImage(input_img_array: np.ndarray, size: np.ndarray, operation: Callable[[np.ndarray, np.ndarray], np.ndarray]):
+@dispatch(np.ndarray, int, object)
+def traverseImage(input_img_array: np.ndarray, size: int, operation: Callable[[np.ndarray, np.ndarray], np.ndarray]):
     """
     Computes the correlation of an image with a given mask.
 
