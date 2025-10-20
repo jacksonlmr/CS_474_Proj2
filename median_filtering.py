@@ -1,4 +1,4 @@
-from helpers import salt_pepper_noise, traverseImage, get_median
+from helpers import salt_pepper_noise, traverseImage, get_median, add_images
 import cv2
 import numpy as np
 
@@ -36,7 +36,7 @@ def median_filter(input_img_array: np.ndarray, size: int):
     -----------
     >**output_array**: 2D array representing the filtered image
     """
-    return traverseImage(input_img_array=input_img_array, size=size, operation=get_median)
+    return traverseImage(input_img_array, size, get_median)
 
 #lenna filtering
 lenna_sp_30_median_filtered7 = median_filter(lenna_sp_30, 7)
@@ -64,3 +64,17 @@ cv2.imwrite(f'{outfile_save_path}boat_sp_50_median_filtered7.jpg', boat_sp_50_me
 
 boat_sp_50_median_filtered15 = median_filter(boat_sp_50, 15)
 cv2.imwrite(f'{outfile_save_path}boat_sp_50_median_filtered15.jpg', boat_sp_50_median_filtered15)
+
+#compare images (they looked too  similar, but they are different)
+# boat_sp_30_median_filtered15 = boat_sp_30_median_filtered15.astype(np.int64)
+# boat_sp_50_median_filtered15 = boat_sp_50_median_filtered15.astype(np.int64)
+# boat_compared_15 = add_images(boat_sp_30_median_filtered15, -1*boat_sp_50_median_filtered15)
+# for row in range(boat_compared_15.shape[0]):
+#     for col in  range(boat_compared_15.shape[1]):
+#         if boat_compared_15[row, col] > 0:
+#             boat_compared_15[row, col] = 255
+#         else:
+#             boat_compared_15[row, col] = 0
+
+# boat_compared_15 = boat_compared_15.astype(np.uint8)
+# cv2.imwrite(f'{outfile_save_path}boat_compared_15.jpg', boat_compared_15)

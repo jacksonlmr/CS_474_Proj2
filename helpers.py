@@ -183,20 +183,18 @@ def salt_pepper_noise(input_img_array: np.ndarray, noise_percent: float):
     #calculate step to go through array based on percent
     input_rows = input_img_array.shape[0]
     input_cols = input_img_array.shape[1]
-
-    row_step = int(np.ceil(input_rows*noise_percent))
-    col_step = int(np.ceil(input_cols*noise_percent))
+    output_img_array = input_img_array.copy()
 
     #at each, randomly make the pixel black or white (50% chance of each)
     for row in range(input_rows):
         for col in range(input_cols):
             if (random.random() < noise_percent):
                 if random.randint(0, 1) == 0:
-                    input_img_array[row, col] = 0
+                    output_img_array[row, col] = 0
                 else:
-                    input_img_array[row, col] = 255
+                    output_img_array[row, col] = 255
 
-    return input_img_array
+    return output_img_array
 
 def get_median(input_array: np.ndarray):
     return int(np.median(input_array))
