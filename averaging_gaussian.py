@@ -33,19 +33,18 @@ def average(input_img_array: np.ndarray, size: int):
     
     return traverseImage(input_img_array, weights, weightSumMatrix)
 
-# lenna_average7 = average(lenna, 7)
-# cv2.imwrite(f'{outfile_save_path}lenna_averaged7.jpg', lenna_average7)
+lenna_average7 = average(lenna, 7)
+cv2.imwrite(f'{outfile_save_path}lenna_averaged7.jpg', lenna_average7)
 
-# lenna_average15 = average(lenna, 15)
-# cv2.imwrite(f'{outfile_save_path}lenna_averaged15.jpg', lenna_average15)
+lenna_average15 = average(lenna, 15)
+cv2.imwrite(f'{outfile_save_path}lenna_averaged15.jpg', lenna_average15)
 
-# average_test_array = np.array([
-#     [0, 1, 2],
-#     [2, 1, 0],
-#     [0, 1, 2]
-# ], dtype=np.uint8)
+sf_average7 = average(sf, 7)
+cv2.imwrite(f'{outfile_save_path}sf_averaged7.jpg', sf_average7)
 
-# print(average(average_test_array, 3))
+sf_average15 = average(sf, 15)
+cv2.imwrite(f'{outfile_save_path}sf_averaged15.jpg', sf_average15)
+
 
 def gaussian(input_img_array: np.ndarray, weights: np.ndarray):
     """
@@ -95,8 +94,14 @@ gaussian15 = np.array([
     [2,2,3,4,5,5,6,6,6,5,5,4,3,2,2]
 ])
 
-# lenna_guassian7 = gaussian(lenna, gaussian7)
-# cv2.imwrite(f'{outfile_save_path}lenna_guassian7.jpg', lenna_guassian7)
+lenna_guassian7 = gaussian(lenna, gaussian7)
+cv2.imwrite(f'{outfile_save_path}lenna_guassian7.jpg', lenna_guassian7)
 
-# lenna_guassian15 = gaussian(lenna, gaussian15)
-# cv2.imwrite(f'{outfile_save_path}lenna_guassian15.jpg', lenna_guassian15)
+lenna_guassian15 = gaussian(lenna, gaussian15)
+cv2.imwrite(f'{outfile_save_path}lenna_guassian15.jpg', lenna_guassian15)
+
+sf_guassian7 = gaussian(sf, gaussian7)
+cv2.imwrite(f'{outfile_save_path}sf_guassian7.jpg', sf_guassian7)
+
+sf_guassian15 = gaussian(sf, gaussian15)
+cv2.imwrite(f'{outfile_save_path}sf_guassian15.jpg', sf_guassian15)

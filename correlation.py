@@ -44,15 +44,4 @@ correlated_image = Image.fromarray(correlated_image_array)
 correlated_image.save(f"{outfile_save_path}correlated_image.jpg")
 
 
-#test correlation on small array
-# correlation_test_array = np.array([
-#     [0, 1, 2],
-#     [2, 1, 0],
-#     [0, 1, 2]
-# ], dtype=np.uint8)
-
-# test_weights = np.ones((3, 3), dtype=np.uint8)
-
-# print(correlation(correlation_test_array, test_weights))
-
 

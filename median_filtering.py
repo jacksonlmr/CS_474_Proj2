@@ -6,6 +6,7 @@ outfile_save_path = "Output_Images/Median_Filtering/"
 
 lenna = cv2.imread('Input_Images/lenna.gif', flags=0)
 boat = cv2.imread('Input_Images/boat.gif', flags=0)
+cv2.imwrite(f'{outfile_save_path}boat.jpg', boat)
 
 #salt and pepper images
 lenna_sp_30 = salt_pepper_noise(lenna, .3)
@@ -65,16 +66,3 @@ cv2.imwrite(f'{outfile_save_path}boat_sp_50_median_filtered7.jpg', boat_sp_50_me
 boat_sp_50_median_filtered15 = median_filter(boat_sp_50, 15)
 cv2.imwrite(f'{outfile_save_path}boat_sp_50_median_filtered15.jpg', boat_sp_50_median_filtered15)
 
-#compare images (they looked too  similar, but they are different)
-# boat_sp_30_median_filtered15 = boat_sp_30_median_filtered15.astype(np.int64)
-# boat_sp_50_median_filtered15 = boat_sp_50_median_filtered15.astype(np.int64)
-# boat_compared_15 = add_images(boat_sp_30_median_filtered15, -1*boat_sp_50_median_filtered15)
-# for row in range(boat_compared_15.shape[0]):
-#     for col in  range(boat_compared_15.shape[1]):
-#         if boat_compared_15[row, col] > 0:
-#             boat_compared_15[row, col] = 255
-#         else:
-#             boat_compared_15[row, col] = 0
-
-# boat_compared_15 = boat_compared_15.astype(np.uint8)
-# cv2.imwrite(f'{outfile_save_path}boat_compared_15.jpg', boat_compared_15)
